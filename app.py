@@ -1,43 +1,63 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, render_template, jsonify, make_response
 from fpdf import FPDF
-import os
 
 app = Flask(__name__)
 
-@app.route('/test', methods=['POST'])
-def penetration_test():
-    data = request.json
-    url = data.get('url')
+# Home route to render the form
+@app.route('/')
+def home():
+    return render_template('index.html')
 
+# Handle form submission
+@app.route('/submit', methods=['POST'])
+def submit():
+    url = request.form.get('url')  # Get URL from the form
     if not url:
-        return jsonify(success=False, error="Invalid URL")
+        return jsonify({'error': 'URL is required'}), 400
 
-    # Simulated results (replace with real pentesting logic)
-    results = f"""
-    <ul>
-        <li>Scanning website: {url}</li>
-        <li>Open Ports: 80, 443</li>
-        <li>SSL Validity: Pass</li>
-        <li>SQL Injection Test: No vulnerabilities found</li>
-        <li>XSS Test: Vulnerabilities found in input field 'search'</li>
-    </ul>
-    """
-    with open('report.pdf', 'w') as f:
-        pdf = FPDF()
-        pdf.set_font("Arial", size=12)
-        pdf.add_page()
-        pdf.cell(200, 10, txt="Penetration Test Report", ln=True, align='C')
-        pdf.multi_cell(0, 10, f"Results for {url}:\n" + results)
-        pdf.output("report.pdf")
+    # Simulate penetration testing results
+    results = {
+        'url': url,
+        'vulnerabilities': [
+            {'type': 'SQL Injection', 'status': 'Not Found'},
+            {'type': 'XSS', 'status': 'Detected'},
+            {'type': 'CSRF', 'status': 'Not Found'},
+            {'type': 'Open Redirect', 'status': 'Not Found'}
+        ]
+    }
+    return jsonify(results)
 
-    return jsonify(success=True, results=results)
-
-@app.route('/download', methods=['GET'])
+# Route to generate a PDF report
+@app.route('/download-report', methods=['POST'])
 def download_report():
-    path = "report.pdf"
-    if os.path.exists(path):
-        return send_file(path, as_attachment=True)
-    return jsonify(success=False, error="No report found")
+    url = request.form.get('url')
+    results = request.form.get('results')  # Expecting results in JSON format
+    if not url or not results:
+        return 'Invalid data', 400
+
+    results = eval(results)  # Convert string back to dictionary (for demo purposes)
+
+    # Create PDF
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    # Add content to the PDF
+    pdf.cell(200, 10, txt="Penetration Testing Report", ln=True, align='C')
+    pdf.ln(10)
+    pdf.cell(200, 10, txt=f"URL: {url}", ln=True)
+    pdf.ln(10)
+
+    pdf.cell(200, 10, txt="Vulnerabilities Found:", ln=True)
+    pdf.ln(5)
+    for vuln in results['vulnerabilities']:
+        pdf.cell(200, 10, txt=f"- {vuln['type']}: {vuln['status']}", ln=True)
+
+    # Output PDF
+    response = make_response(pdf.output(dest='S').encode('latin1'))
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename="report.pdf"'
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
