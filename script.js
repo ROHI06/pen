@@ -1,39 +1,39 @@
-document.getElementById('testForm').addEventListener('submit', async function (event) {
-    event.preventDefault();
+document.getElementById('testForm').addEventListener('submit', function (e) {
+    e.preventDefault();
 
-    const url = document.getElementById('urlInput').value;
+    const urlInput = document.getElementById('url');
+    const url = urlInput.value;
 
-    // Fetch results from the server
-    const response = await fetch('/test', {
+    fetch('/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url }),
-    });
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `url=${encodeURIComponent(url)}`
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
 
-    const data = await response.json();
+            // Show results section
+            const resultsSection = document.getElementById('results');
+            const resultsContent = document.getElementById('resultsContent');
+            const reportUrl = document.getElementById('reportUrl');
+            const reportResults = document.getElementById('reportResults');
 
-    if (data.success) {
-        document.getElementById('resultContent').innerHTML = data.results;
-        document.querySelector('.results').classList.remove('hidden');
-        document.querySelector('.details').classList.remove('hidden');
-    } else {
-        alert('Error: ' + data.error);
-    }
-});
+            resultsContent.innerHTML = `
+                <p><strong>URL:</strong> ${data.url}</p>
+                <ul>
+                    ${data.vulnerabilities.map(vuln => `<li>${vuln.type}: ${vuln.status}</li>`).join('')}
+                </ul>
+            `;
 
-function toggleResults() {
-    const details = document.querySelector('.details');
-    details.classList.toggle('hidden');
-}
+            // Populate hidden fields for report
+            reportUrl.value = data.url;
+            reportResults.value = JSON.stringify(data);
 
-document.getElementById('downloadButton').addEventListener('click', function () {
-    fetch('/download').then(response => {
-        response.blob().then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'Penetration_Test_Report.pdf';
-            link.click();
-        });
-    });
+            resultsSection.classList.remove('hidden');
+        })
+        .catch(error => console.error('Error:', error));
 });
