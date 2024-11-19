@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penetration Test</title>
+    <title>Penetration Testing Tool</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js" defer></script>
 </head>
 <body>
-    <div class="header">
-        <h1>Penetration Test</h1>
-    </div>
-    <div class="form-container">
+    <header>
+        <h1>Penetration Testing</h1>
+    </header>
+    <main>
         <form id="testForm">
-            <input type="url" id="urlInput" placeholder="Enter Website URL" required>
-            <button type="submit" id="submitButton">Submit</button>
+            <input type="url" name="url" id="url" placeholder="Enter the website URL" required>
+            <button type="submit">Submit</button>
         </form>
-    </div>
-    <div id="results" class="results hidden">
-        <button class="toggle-button" onclick="toggleResults()">Toggle Results</button>
-        <div class="details hidden">
-            <h3>Penetration Test Results:</h3>
-            <div id="resultContent"></div>
-            <button id="downloadButton">Download Report</button>
-        </div>
-    </div>
-    <script src="script.js"></script>
+        <section id="results" class="hidden">
+            <h2>Results</h2>
+            <div id="resultsContent"></div>
+            <form id="downloadForm" method="POST" action="/download-report">
+                <input type="hidden" name="url" id="reportUrl">
+                <input type="hidden" name="results" id="reportResults">
+                <button type="submit">Download Report</button>
+            </form>
+        </section>
+    </main>
 </body>
 </html>
