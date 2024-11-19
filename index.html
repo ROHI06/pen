@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penetration Test</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Penetration Test</h1>
+    </div>
+    <div class="form-container">
+        <form id="testForm">
+            <input type="url" id="urlInput" placeholder="Enter Website URL" required>
+            <button type="submit" id="submitButton">Submit</button>
+        </form>
+    </div>
+    <div id="results" class="results hidden">
+        <button class="toggle-button" onclick="toggleResults()">Toggle Results</button>
+        <div class="details hidden">
+            <h3>Penetration Test Results:</h3>
+            <div id="resultContent"></div>
+            <button id="downloadButton">Download Report</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    color: black;
+}
+
+.header {
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.form-container {
+    margin: 50px auto;
+    text-align: center;
+}
+
+#urlInput {
+    width: 60%;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+#submitButton {
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+#submitButton:hover {
+    background-color: black;
+    color: white;
+}
+
+.results {
+    text-align: center;
+    margin: 30px auto;
+}
+
+.hidden {
+    display: none;
+}
+
+.details {
+    text-align: left;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid black;
+    width: 80%;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.toggle-button {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+#downloadButton {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+#downloadButton:hover {
+    background-color: white;
+    color: black;
+}
